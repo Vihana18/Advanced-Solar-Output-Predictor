@@ -1,3 +1,4 @@
+Python
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -6,16 +7,56 @@ import joblib
 import pvlib
 import datetime
 
-# 1. PAGE SETUP WITH ECO-FRIENDLY EMBEDDED THEME
+# 1. PAGE SETUP WITH CUSTOM DESIGN CONFIGURATION
 st.set_page_config(
     page_title="Smart Solar Energy Output Predictor", 
-    page_icon="🌱", 
     layout="centered"
 )
 
-# Custom Green Heading Style
-st.markdown("<h1 style='color: #2e7d32;'>🌱 Smart Solar Energy Output Predictor</h1>", unsafe_allow_html=True)
-st.markdown("##### *Empowering Sustainable Micro-Generation via Intelligent AI Analytics*")
+# INJECTING CUSTOM CSS FOR PASTEL MINT GREEN THEME
+# This styles the main body background and adjusts text colors to compliment it
+st.markdown(
+    """
+    <style>
+    /* Main app background */
+    .stApp {
+        background-color: #e8f5e9;
+    }
+    
+    /* Global Text Styling for Readability */
+    p, span, label {
+        color: #2c3e50 !important;
+    }
+    
+    /* Custom Headers to compliment pastel green */
+    .main-title {
+        color: #1b5e20;
+        font-size: 2.3rem;
+        font-weight: bold;
+        text-align: center;
+        white-space: nowrap; /* Forces title onto a single line */
+        margin-bottom: 5px;
+    }
+    
+    .section-heading {
+        color: #2e7d32;
+        margin-top: 20px;
+        font-weight: 600;
+    }
+    
+    /* Soft white/mint card wrapper for metrics to pop against the background */
+    div[data-testid="stMetricValue"] {
+        color: #1b5e20 !important;
+        font-weight: bold;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Single line title with no icons
+st.markdown("<div class='main-title'>Smart Solar Energy Output Predictor</div>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-style: italic; color: #4b6584;'>Empowering Sustainable Micro-Generation via Intelligent AI Analytics</p>", unsafe_allow_html=True)
 st.write("This platform pairs a trained machine learning backend with real-time solar tracking and thermal physics constraints.")
 
 # 2. CACHE THE MODEL
@@ -25,7 +66,7 @@ def load_solar_brain():
 
 ai_brain = load_solar_brain()
 
-# 3. GREEN SIDEBAR USER INTERFACE
+# 3. SIDEBAR USER INTERFACE (Kept exactly as it was)
 st.sidebar.markdown("<h2 style='color: #1b5e20;'>⚙️ Hardware Profile</h2>", unsafe_allow_html=True)
 PANEL_MAX_CAPACITY = st.sidebar.number_input("Maximum Panel Capacity (Watts)", min_value=10.0, max_value=1000.0, value=100.0, step=10.0)
 PANEL_SURFACE_TILT = st.sidebar.slider("Panel Tilt Angle (0° = flat, 90° = vertical wall)", 0, 90, 25)
@@ -52,7 +93,7 @@ try:
         rain = response.get('rain', {}).get('1h', 0)
         
         # Display crisp metrics
-        st.markdown("<h3 style='color: #388e3c;'>🌍 Live Environmental Vectors</h3>", unsafe_allow_html=True)
+        st.markdown("<div class='section-heading'>### Live Environmental Vectors</div>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
         col1.metric("Ambient Temp", f"{temp}°C")
         col2.metric("Cloud Layer", f"{clouds}%")
@@ -90,9 +131,9 @@ try:
 
         # 7. RENDERING RENEWABLE OUTPUT GRAPHICS
         st.markdown("---")
-        st.markdown("<h3 style='color: #1b5e20;'>⚡ Predicted Clean Energy Yield</h3>", unsafe_allow_html=True)
+        st.markdown("<div class='section-heading'>### Predicted Clean Energy Yield</div>", unsafe_allow_html=True)
         
-        # Big green highlighted output block
+        # Big clean highlighted output block
         st.success(f"## **Estimated Output: {tailored_wattage:.2f} Watts**")
         
         # Real-time eco-efficiency feedback cards
