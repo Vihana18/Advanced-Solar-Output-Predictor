@@ -13,7 +13,6 @@ st.set_page_config(
 )
 
 # SOLVIX PREMIUM ECO-THEME INJECTION
-# Recreates the exact premium dark-green hero states, white content cards, and crisp mint geometry
 st.markdown(
     """
     <style>
@@ -38,18 +37,9 @@ st.markdown(
         font-size: 1.25rem; 
         color: #556b2f; 
         font-weight: 600;
-        margin-bottom: 25px;
+        margin-bottom: 35px; /* Increased margin to create clean space */
         text-transform: uppercase;
         letter-spacing: 1px;
-    }
-    
-    /* Core Platform Description Wrapper */
-    .platform-intro {
-        font-size: 1.2rem !important;
-        color: #2c3e50 !important;
-        line-height: 1.6;
-        text-align: center;
-        margin-bottom: 35px;
     }
     
     /* Premium Structured Card Headers (Solvix Section Blocks) */
@@ -76,6 +66,11 @@ st.markdown(
         border: 1px solid #e1e8e3;
     }
     
+    /* Main Page Body Text Overrides - Forces Black/High-Contrast Visibility */
+    .stApp p, .stApp span, .stApp label, .stApp div {
+        color: #111111;
+    }
+    
     /* Massive Metric Badge Display UI */
     div[data-testid="stMetricValue"] {
         font-size: 2.6rem !important;
@@ -86,12 +81,12 @@ st.markdown(
     div[data-testid="stMetricLabel"] p {
         font-size: 1.2rem !important;
         font-weight: 700 !important;
-        color: #40916c !important;
+        color: #2d6a4f !important;
     }
     
-    /* SIDEBAR NAVIGATION CONTROL STYLING (White Text Theme) */
+    /* SIDEBAR NAVIGATION CONTROL STYLING (Kept White Text for Dark Theme contrast) */
     [data-testid="stSidebar"] {
-        background-color: #11261a !important; /* Extra Deep Eco Slate */
+        background-color: #11261a !important; 
     }
     
     [data-testid="stSidebar"] p, 
@@ -115,11 +110,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Solvix Minimalist Hero Header Alignment
+# Solvix Minimalist Hero Header Alignment (Description completely removed)
 st.markdown("<div class='hero-title'>Smart Solar Energy Output Predictor</div>", unsafe_allow_html=True)
 st.markdown("<div class='hero-subtitle'>Powering A Brighter Future</div>", unsafe_allow_html=True)
-
-st.markdown("<div class='platform-intro'><b>This premium analytics node merges a functional random forest machine learning pipeline with rigorous live solar positional tracking vectors and local thermal degradation constants to evaluate micro-generation limits.</b></div>", unsafe_allow_html=True)
 
 # 2. CACHE BACKEND RESOURCING
 @st.cache_resource
@@ -128,7 +121,7 @@ def load_solar_brain():
 
 ai_brain = load_solar_brain()
 
-# 3. SIDEBAR NAVIGATION CONTROLS (Retained structure, matched to Solvix Dark Nav)
+# 3. SIDEBAR NAVIGATION CONTROLS
 st.sidebar.markdown("## ⚙️ Hardware Profile")
 PANEL_MAX_CAPACITY = st.sidebar.number_input("Maximum Panel Capacity (Watts)", min_value=10.0, max_value=1000.0, value=100.0, step=10.0)
 PANEL_SURFACE_TILT = st.sidebar.slider("Panel Tilt Angle (0° = Flat, 90° = Vertical)", 0, 90, 25)
@@ -159,10 +152,13 @@ try:
         st.markdown("<div class='solvix-card'>", unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns(3)
-        col1.metric("Ambient Temp", f"{temp}°C")
-        col2.metric("Cloud Layer", f"{clouds}%")
-        col3.metric("Relative Humidity", f"{humidity}%")
-        
+        with col1:
+            st.metric("Ambient Temp", f"{temp}°C")
+        with col2:
+            st.metric("Cloud Layer", f"{clouds}%")
+        with col3:
+            st.metric("Relative Humidity", f"{humidity}%")
+            
         st.markdown("</div>", unsafe_allow_html=True) # Close Card 1
         
         # 5. MATHEMATICAL CELESTIAL ALIGNMENT COMPUTATIONS
@@ -199,16 +195,17 @@ try:
         st.markdown("<div class='solvix-header'>⚡ Predicted Clean Energy Yield</div>", unsafe_allow_html=True)
         st.markdown("<div class='solvix-card'>", unsafe_allow_html=True)
         
-        # Super prominent high-contrast yield banner
+        # Prominent yield banner
         st.success(f"### **Estimated System Output: {tailored_wattage:.2f} Watts**")
         
-        # Contextual alignment metrics with high visibility text
-        st.markdown(f"<p style='margin-top: 15px; font-size: 1.1rem;'><b>Calculated Rays Mismatch Angle (AOI):</b> {aoi:.2f}°</p>", unsafe_allow_html=True)
+        # Contextual alignment metrics
+        st.markdown(f"<p style='margin-top: 15px; font-size: 1.1rem; color: #111111;'><b>Calculated Rays Mismatch Angle (AOI):</b> {aoi:.2f}°</p>", unsafe_allow_html=True)
         
         if aoi < 45:
             st.info("🎯 **Optimal Alignment Profile:** Structural deployment metrics coordinate directly with current solar trajectories, maximizing potential clean energy input.")
         else:
-            st.warning("⚠️ **Geometric Shading Vector Warning:** Mismatch threshold exceeds optimal limits. High reflective shading verified; reposition hardware orientation to recover lost generation.")
+            # Red warning container for high geometric mismatch alerts
+            st.error("⚠️ **Geometric Shading Vector Warning:** Mismatch threshold exceeds optimal limits. High reflective shading verified; reposition hardware orientation to recover lost generation.")
             
         st.markdown("</div>", unsafe_allow_html=True) # Close Card 2
             
