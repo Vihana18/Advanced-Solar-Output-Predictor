@@ -13,8 +13,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# INJECTING CUSTOM CSS FOR PASTEL MINT GREEN THEME
-# This styles the main body background and adjusts text colors to compliment it
+# INJECTING CUSTOM CSS FOR ADVANCED TYPOGRAPHY AND SIDEBAR STYLING
 st.markdown(
     """
     <style>
@@ -23,41 +22,72 @@ st.markdown(
         background-color: #e8f5e9;
     }
     
-    /* Global Text Styling for Readability */
-    p, span, label {
+    /* Make all standard paragraph and description text bigger */
+    p, span, label, .stMarkdown {
+        font-size: 1.15rem !important;
         color: #2c3e50 !important;
+        font-weight: 500;
     }
     
-    /* Custom Headers to compliment pastel green */
+    /* Single line title styling */
     .main-title {
         color: #1b5e20;
-        font-size: 2.3rem;
-        font-weight: bold;
+        font-size: 2.6rem;
+        font-weight: 800;
         text-align: center;
-        white-space: nowrap; /* Forces title onto a single line */
-        margin-bottom: 5px;
+        white-space: nowrap;
+        margin-bottom: 8px;
     }
     
-    .section-heading {
-        color: #2e7d32;
-        margin-top: 20px;
-        font-weight: 600;
-    }
-    
-    /* Soft white/mint card wrapper for metrics to pop against the background */
-    div[data-testid="stMetricValue"] {
+    /* Enhanced Subheading Typography */
+    .custom-subheading {
         color: #1b5e20 !important;
-        font-weight: bold;
+        font-size: 1.65rem !important;
+        font-weight: 700 !important;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #a5d6a7;
+        padding-bottom: 5px;
+    }
+    
+    /* Make metric text display much larger */
+    div[data-testid="stMetricValue"] {
+        font-size: 2.2rem !important;
+        color: #1b5e20 !important;
+        font-weight: 800 !important;
+    }
+    
+    div[data-testid="stMetricLabel"] p {
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        color: #388e3c !important;
+    }
+    
+    /* FORCE SIDEBAR TEXT TO BE DISTINCT WHITE */
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] span, 
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] h2 {
+        color: #ffffff !important;
+        font-size: 1.15rem !important;
+        font-weight: 600 !important;
+    }
+    
+    [data-testid="stSidebar"] h2 {
+        font-size: 1.8rem !important;
+        font-weight: 700 !important;
+        border-bottom: 1px solid #ffffff;
+        padding-bottom: 5px;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# Single line title with no icons
+# Single line title with clear typography
 st.markdown("<div class='main-title'>Smart Solar Energy Output Predictor</div>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-style: italic; color: #4b6584;'>Empowering Sustainable Micro-Generation via Intelligent AI Analytics</p>", unsafe_allow_html=True)
-st.write("This platform pairs a trained machine learning backend with real-time solar tracking and thermal physics constraints.")
+st.markdown("<p style='text-align: center; font-size: 1.3rem !important; font-style: italic; color: #34495e; font-weight: bold;'>Empowering Sustainable Micro-Generation via Intelligent AI Analytics</p>", unsafe_allow_html=True)
+st.write("**This platform pairs a trained machine learning backend with real-time solar tracking and thermal physics constraints to accurately model generation outcomes.**")
 
 # 2. CACHE THE MODEL
 @st.cache_resource
@@ -66,8 +96,8 @@ def load_solar_brain():
 
 ai_brain = load_solar_brain()
 
-# 3. SIDEBAR USER INTERFACE (Kept exactly as it was)
-st.sidebar.markdown("<h2 style='color: #1b5e20;'>⚙️ Hardware Profile</h2>", unsafe_allow_html=True)
+# 3. SIDEBAR USER INTERFACE (Text styled white via global CSS injection)
+st.sidebar.markdown("## ⚙️ Hardware Profile")
 PANEL_MAX_CAPACITY = st.sidebar.number_input("Maximum Panel Capacity (Watts)", min_value=10.0, max_value=1000.0, value=100.0, step=10.0)
 PANEL_SURFACE_TILT = st.sidebar.slider("Panel Tilt Angle (0° = flat, 90° = vertical wall)", 0, 90, 25)
 PANEL_SURFACE_AZIMUTH = st.sidebar.slider("Compass Facing Angle (180° = South, 90° = East)", 0, 360, 180)
@@ -92,8 +122,9 @@ try:
         pressure = response['main']['pressure']
         rain = response.get('rain', {}).get('1h', 0)
         
-        # Display crisp metrics
-        st.markdown("<div class='section-heading'>### Live Environmental Vectors</div>", unsafe_allow_html=True)
+        # Large Structured Subheading with Icon
+        st.markdown("<div class='custom-subheading'>🌍 Live Environmental Vectors</div>", unsafe_allow_html=True)
+        
         col1, col2, col3 = st.columns(3)
         col1.metric("Ambient Temp", f"{temp}°C")
         col2.metric("Cloud Layer", f"{clouds}%")
@@ -130,13 +161,15 @@ try:
         if tailored_wattage < 0: tailored_wattage = 0.0
 
         # 7. RENDERING RENEWABLE OUTPUT GRAPHICS
-        st.markdown("---")
-        st.markdown("<div class='section-heading'>### Predicted Clean Energy Yield</div>", unsafe_allow_html=True)
+        st.markdown("<br><hr>", unsafe_allow_html=True)
         
-        # Big clean highlighted output block
-        st.success(f"## **Estimated Output: {tailored_wattage:.2f} Watts**")
+        # Large Structured Subheading with Icon
+        st.markdown("<div class='custom-subheading'>⚡ Predicted Clean Energy Yield</div>", unsafe_allow_html=True)
         
-        # Real-time eco-efficiency feedback cards
+        # Highly visible output box
+        st.success(f"### **Estimated Output: {tailored_wattage:.2f} Watts**")
+        
+        # Real-time bolded eco-efficiency feedback cards
         if aoi < 45:
             st.info("🎯 **Optimal Angle Optimization:** Your structural layout has excellent alignment with current solar coordinates, maximizing renewable capture.")
         else:
